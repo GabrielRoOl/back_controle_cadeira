@@ -1,6 +1,7 @@
 package br.com.cadeira.controle.vitrium.vitrium.servicies;
 
-import br.com.cadeira.controle.vitrium.vitrium.dto.ListAllDTO;
+import br.com.cadeira.controle.vitrium.vitrium.dto.AdicionaCadeiraDTO;
+import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeirasDTO;
 import br.com.cadeira.controle.vitrium.vitrium.entity.Cadeiras;
 import br.com.cadeira.controle.vitrium.vitrium.repositories.CadeiraRepository;
 import jakarta.transaction.Transactional;
@@ -23,9 +24,9 @@ public class CadeiraService {
 
 
     @Transactional
-    public List<ListAllDTO> findAll() {
+    public List<ListaCadeirasDTO> findAll() {
         List<Cadeiras> cadeiras = cadeiraRepository.findAll();
-        return cadeiras.stream().map(c -> new ListAllDTO(
+        return cadeiras.stream().map(c -> new ListaCadeirasDTO(
                         c.getNomePaciente(),
                         c.getDestino(),
                         c.getNmrClinica(),
@@ -34,5 +35,21 @@ public class CadeiraService {
                         c.getCadeira(),
                         c.getDevolvida()))
                 .collect(Collectors.toList());
+    }
+
+
+    public Object addCadeira(AdicionaCadeiraDTO dto) {
+        Cadeiras novaCadeira = new Cadeiras(
+                dto.nomePaciente(),
+                dto.destino(),
+                dto.numeroClinica(),
+                dto.cadeira()
+        );
+
+        novaCadeira.registraHorarioEntrega();
+
+        cadeiraRepository.save(novaCadeira);
+
+        return novaCadeira;
     }
 }
