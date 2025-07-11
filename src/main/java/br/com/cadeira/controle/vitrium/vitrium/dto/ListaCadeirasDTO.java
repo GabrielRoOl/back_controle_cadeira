@@ -4,7 +4,7 @@ import br.com.cadeira.controle.vitrium.vitrium.entity.enums.ECadeira;
 
 import java.time.Instant;
 
-public record ListAllDTO(
+public record ListaCadeirasDTO(
         String nomePaciente,
         String destino,
         int numeroClinica,
