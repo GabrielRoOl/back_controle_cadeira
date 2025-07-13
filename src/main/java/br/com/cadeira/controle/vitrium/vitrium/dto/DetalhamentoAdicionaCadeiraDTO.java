@@ -14,7 +14,11 @@ public record DetalhamentoAdicionaCadeiraDTO(
         Boolean devolvida) {
 
     public DetalhamentoAdicionaCadeiraDTO(Cadeiras novaCadeira) {
-        this(novaCadeira.getNomePaciente(), novaCadeira.getDestino()
-                , novaCadeira.getNmrClinica(), novaCadeira.getDtEntrega(), novaCadeira.getCadeira(), novaCadeira.getDevolvida());
+        this(novaCadeira.getNomePaciente(),
+                novaCadeira.getDestino()
+                , novaCadeira.getNmrClinica(),
+                novaCadeira.getDtEntrega(),
+                novaCadeira.getCadeira(),
+                novaCadeira.getDevolvida());
     }
 }

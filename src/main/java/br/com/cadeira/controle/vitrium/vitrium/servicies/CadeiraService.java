@@ -5,13 +5,13 @@ import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeiraPorIdDTO;
 import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeirasDTO;
 import br.com.cadeira.controle.vitrium.vitrium.entity.Cadeiras;
 import br.com.cadeira.controle.vitrium.vitrium.repositories.CadeiraRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Service
@@ -25,10 +25,11 @@ public class CadeiraService {
     }
 
 
-    @Transactional()
+    @Transactional
     public List<ListaCadeirasDTO> findAll() {
         List<Cadeiras> cadeiras = cadeiraRepository.findAll();
         return cadeiras.stream().map(c -> new ListaCadeirasDTO(
+                        c.getId(),
                         c.getNomePaciente(),
                         c.getDestino(),
                         c.getNmrClinica(),
@@ -55,16 +56,33 @@ public class CadeiraService {
 
     }
 
-    @Transactional()
-    public Stream<ListaCadeiraPorIdDTO> findById(Long id) {
-        return cadeiraRepository.findById(id).stream().map(c -> new ListaCadeiraPorIdDTO(
-                c.getNomePaciente(),
-                c.getDestino(),
-                c.getNmrClinica(),
-                c.getDtEntrega(),
-                c.getDtDevolucao(),
-                c.getCadeira(),
-                c.getDevolvida()
-        ));
+    @Transactional
+    public ListaCadeiraPorIdDTO findById(Long id) {
+        Cadeiras cadeiras = cadeiraRepository.findById(id).orElseThrow(() -> new RuntimeException("Cadeira não encontrada"));
+
+        return new ListaCadeiraPorIdDTO(
+                cadeiras.getNomePaciente(),
+                cadeiras.getDestino(),
+                cadeiras.getNmrClinica(),
+                cadeiras.getDtEntrega(),
+                cadeiras.getDtDevolucao(),
+                cadeiras.getCadeira(),
+                cadeiras.getDevolvida()
+        );
+    }
+
+    @Transactional
+    public ListaCadeiraPorIdDTO devolucao(Long id) {
+        Cadeiras cadeiras = cadeiraRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Cadeira não encontrada"));
+        cadeiras.registraHorarioDevolucao();
+        return new ListaCadeiraPorIdDTO(
+                cadeiras.getNomePaciente(),
+                cadeiras.getDestino(),
+                cadeiras.getNmrClinica(),
+                cadeiras.getDtEntrega(),
+                cadeiras.getDtDevolucao(),
+                cadeiras.getCadeira(),
+                cadeiras.getDevolvida()
+        );
     }
 }

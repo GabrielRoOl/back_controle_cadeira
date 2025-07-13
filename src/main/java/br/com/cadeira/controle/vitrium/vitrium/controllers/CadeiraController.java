@@ -13,7 +13,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(value = "/cadeira")
@@ -33,8 +32,8 @@ public class CadeiraController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Stream<ListaCadeiraPorIdDTO>> findById(@PathVariable Long id) {
-        var cadeira = cadeiraService.findById(id);
+    public ResponseEntity<ListaCadeiraPorIdDTO> findById(@PathVariable Long id) {
+        ListaCadeiraPorIdDTO cadeira = cadeiraService.findById(id);
         return ResponseEntity.ok(cadeira);
     }
 
@@ -48,6 +47,12 @@ public class CadeiraController {
         URI uri = uriBuilder.path("/cadeira").buildAndExpand(cadeira.getId()).toUri();
 
         return ResponseEntity.created(uri).body(new DetalhamentoAdicionaCadeiraDTO(cadeira));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ListaCadeiraPorIdDTO> devolucao(@PathVariable Long id) {
+        ListaCadeiraPorIdDTO cadeira = cadeiraService.devolucao(id);
+        return ResponseEntity.ok(cadeira);
     }
 
 }
