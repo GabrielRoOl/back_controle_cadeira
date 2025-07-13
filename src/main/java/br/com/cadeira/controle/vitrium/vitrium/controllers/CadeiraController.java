@@ -1,13 +1,19 @@
 package br.com.cadeira.controle.vitrium.vitrium.controllers;
 
 import br.com.cadeira.controle.vitrium.vitrium.dto.AdicionaCadeiraDTO;
+import br.com.cadeira.controle.vitrium.vitrium.dto.DetalhamentoAdicionaCadeiraDTO;
+import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeiraPorIdDTO;
 import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeirasDTO;
+import br.com.cadeira.controle.vitrium.vitrium.entity.Cadeiras;
 import br.com.cadeira.controle.vitrium.vitrium.servicies.CadeiraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(value = "/cadeira")
@@ -26,8 +32,22 @@ public class CadeiraController {
         return ResponseEntity.ok(cadeiras);
     }
 
-    @PostMapping
-    public void AddCadeira(@RequestBody AdicionaCadeiraDTO dto) {
-        var cadeiras = cadeiraService.addCadeira(dto);
+    @GetMapping("/{id}")
+    public ResponseEntity<Stream<ListaCadeiraPorIdDTO>> findById(@PathVariable Long id) {
+        var cadeira = cadeiraService.findById(id);
+        return ResponseEntity.ok(cadeira);
     }
+
+    @PostMapping
+    public ResponseEntity<DetalhamentoAdicionaCadeiraDTO> AddCadeira(@RequestBody AdicionaCadeiraDTO dto, UriComponentsBuilder uriBuilder) {
+        Cadeiras cadeira = new Cadeiras(dto);
+        cadeira.registraHorarioEntrega();
+
+        cadeiraService.addCadeira(dto);
+
+        URI uri = uriBuilder.path("/cadeira").buildAndExpand(cadeira.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(new DetalhamentoAdicionaCadeiraDTO(cadeira));
+    }
+
 }
