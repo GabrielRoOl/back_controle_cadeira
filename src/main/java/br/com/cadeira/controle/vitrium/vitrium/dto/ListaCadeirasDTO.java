@@ -2,14 +2,14 @@ package br.com.cadeira.controle.vitrium.vitrium.dto;
 
 import br.com.cadeira.controle.vitrium.vitrium.entity.enums.ECadeira;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
 
 public record ListaCadeirasDTO(
         String nomePaciente,
         String destino,
         int numeroClinica,
-        Instant dataEntrega,
-        Instant dataDevolucao,
+        OffsetDateTime dataEntrega,
+        OffsetDateTime dataDevolucao,
         ECadeira cadeira,
         Boolean devolvida) {
 }
