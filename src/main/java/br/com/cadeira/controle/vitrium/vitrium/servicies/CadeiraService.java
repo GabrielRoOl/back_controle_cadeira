@@ -1,6 +1,7 @@
 package br.com.cadeira.controle.vitrium.vitrium.servicies;
 
 import br.com.cadeira.controle.vitrium.vitrium.dto.AdicionaCadeiraDTO;
+import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeiraPorIdDTO;
 import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeirasDTO;
 import br.com.cadeira.controle.vitrium.vitrium.entity.Cadeiras;
 import br.com.cadeira.controle.vitrium.vitrium.repositories.CadeiraRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
@@ -23,7 +25,7 @@ public class CadeiraService {
     }
 
 
-    @Transactional
+    @Transactional()
     public List<ListaCadeirasDTO> findAll() {
         List<Cadeiras> cadeiras = cadeiraRepository.findAll();
         return cadeiras.stream().map(c -> new ListaCadeirasDTO(
@@ -38,7 +40,8 @@ public class CadeiraService {
     }
 
 
-    public Object addCadeira(AdicionaCadeiraDTO dto) {
+    @Transactional
+    public void addCadeira(AdicionaCadeiraDTO dto) {
         Cadeiras novaCadeira = new Cadeiras(
                 dto.nomePaciente(),
                 dto.destino(),
@@ -50,6 +53,18 @@ public class CadeiraService {
 
         cadeiraRepository.save(novaCadeira);
 
-        return novaCadeira;
+    }
+
+    @Transactional()
+    public Stream<ListaCadeiraPorIdDTO> findById(Long id) {
+        return cadeiraRepository.findById(id).stream().map(c -> new ListaCadeiraPorIdDTO(
+                c.getNomePaciente(),
+                c.getDestino(),
+                c.getNmrClinica(),
+                c.getDtEntrega(),
+                c.getDtDevolucao(),
+                c.getCadeira(),
+                c.getDevolvida()
+        ));
     }
 }
