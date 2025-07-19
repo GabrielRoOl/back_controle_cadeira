@@ -4,8 +4,8 @@ import br.com.cadeira.controle.vitrium.vitrium.dto.AdicionaCadeiraDTO;
 import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeiraPorIdDTO;
 import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeirasDTO;
 import br.com.cadeira.controle.vitrium.vitrium.entity.Cadeiras;
+import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairNotFoundException;
 import br.com.cadeira.controle.vitrium.vitrium.repositories.CadeiraRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,7 +58,7 @@ public class CadeiraService {
 
     @Transactional
     public ListaCadeiraPorIdDTO findById(Long id) {
-        Cadeiras cadeiras = cadeiraRepository.findById(id).orElseThrow(() -> new RuntimeException("Cadeira não encontrada"));
+        Cadeiras cadeiras = cadeiraRepository.findById(id).orElseThrow(ChairNotFoundException::new);
 
         return new ListaCadeiraPorIdDTO(
                 cadeiras.getNomePaciente(),
@@ -73,7 +73,7 @@ public class CadeiraService {
 
     @Transactional
     public ListaCadeiraPorIdDTO devolucao(Long id) {
-        Cadeiras cadeiras = cadeiraRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Cadeira não encontrada"));
+        Cadeiras cadeiras = cadeiraRepository.findById(id).orElseThrow(ChairNotFoundException::new);
         cadeiras.registraHorarioDevolucao();
         return new ListaCadeiraPorIdDTO(
                 cadeiras.getNomePaciente(),
