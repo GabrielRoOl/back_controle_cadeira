@@ -1,5 +1,6 @@
 package br.com.cadeira.controle.vitrium.vitrium.exceptions.handler;
 
+import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairAlreadyReturned;
 import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairNotFoundException;
 import br.com.cadeira.controle.vitrium.vitrium.exceptions.model.ApiError;
 import org.springframework.http.HttpStatus;
@@ -27,9 +28,7 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({
-            ChairNotFoundException.class
-    })
+    @ExceptionHandler({ChairNotFoundException.class})
     public ResponseEntity<ApiError> notFoundException(RuntimeException ex) {
         ApiError apiError = ApiError
                 .builder()
@@ -41,6 +40,17 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(ChairAlreadyReturned.class)
+    public ResponseEntity<ApiError> conflitArgumentException(RuntimeException ex) {
+        ApiError apiError = ApiError
+                .builder()
+                .timestamp(LocalDateTime.now())
+                .code(HttpStatus.CONFLICT.value())
+                .status(HttpStatus.CONFLICT.name())
+                .errors(List.of(ex.getMessage()))
+                .build();
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> argumentNotValidException(MethodArgumentNotValidException ex) {
@@ -58,5 +68,6 @@ public class RestExceptionHandler {
                 .build();
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
+
 
 }
