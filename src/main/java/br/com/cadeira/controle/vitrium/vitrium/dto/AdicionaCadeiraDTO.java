@@ -8,6 +8,6 @@ public record AdicionaCadeiraDTO(
         @NotBlank String nomePaciente,
         @NotBlank String destino,
         @NotNull int numeroClinica,
-        ECadeira cadeira
+        @NotNull(message = "Tipo invalido, valores permitidos: CADEIRA_01, CADEIRA_02, CADEIRA_03, CADEIRA_04, CADEIRA_05, CADEIRA_06, CADEIRA_07 e CADEIRA_08") ECadeira cadeira
 ) {
 }

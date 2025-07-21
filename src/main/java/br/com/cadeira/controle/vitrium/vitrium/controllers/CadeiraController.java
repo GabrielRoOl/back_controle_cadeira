@@ -5,7 +5,9 @@ import br.com.cadeira.controle.vitrium.vitrium.dto.DetalhamentoAdicionaCadeiraDT
 import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeiraPorIdDTO;
 import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeirasDTO;
 import br.com.cadeira.controle.vitrium.vitrium.entity.Cadeiras;
+import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairAlreadyReturned;
 import br.com.cadeira.controle.vitrium.vitrium.servicies.CadeiraService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +40,7 @@ public class CadeiraController {
     }
 
     @PostMapping
-    public ResponseEntity<DetalhamentoAdicionaCadeiraDTO> AddCadeira(@RequestBody AdicionaCadeiraDTO dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<DetalhamentoAdicionaCadeiraDTO> AddCadeira(@RequestBody @Valid AdicionaCadeiraDTO dto, UriComponentsBuilder uriBuilder) {
         Cadeiras cadeira = new Cadeiras(dto);
         cadeira.registraHorarioEntrega();
 
@@ -49,8 +51,8 @@ public class CadeiraController {
         return ResponseEntity.created(uri).body(new DetalhamentoAdicionaCadeiraDTO(cadeira));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ListaCadeiraPorIdDTO> devolucao(@PathVariable Long id) {
+    @PutMapping("/devolucao/{id}")
+    public ResponseEntity<ListaCadeiraPorIdDTO> devolucao(@PathVariable Long id) throws ChairAlreadyReturned {
         ListaCadeiraPorIdDTO cadeira = cadeiraService.devolucao(id);
         return ResponseEntity.ok(cadeira);
     }

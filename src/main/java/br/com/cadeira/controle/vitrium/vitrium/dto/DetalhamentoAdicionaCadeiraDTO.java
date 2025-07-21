@@ -2,6 +2,7 @@ package br.com.cadeira.controle.vitrium.vitrium.dto;
 
 import br.com.cadeira.controle.vitrium.vitrium.entity.Cadeiras;
 import br.com.cadeira.controle.vitrium.vitrium.entity.enums.ECadeira;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.OffsetDateTime;
 
@@ -9,7 +10,7 @@ public record DetalhamentoAdicionaCadeiraDTO(
         String nomePaciente,
         String destino,
         int numeroClinica,
-        OffsetDateTime dataEntrega,
+        @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss") OffsetDateTime dataEntrega,
         ECadeira cadeira,
         Boolean devolvida) {
 

@@ -4,12 +4,14 @@ import br.com.cadeira.controle.vitrium.vitrium.dto.AdicionaCadeiraDTO;
 import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeiraPorIdDTO;
 import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeirasDTO;
 import br.com.cadeira.controle.vitrium.vitrium.entity.Cadeiras;
+import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairAlreadyReturned;
 import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairNotFoundException;
 import br.com.cadeira.controle.vitrium.vitrium.repositories.CadeiraRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,9 +74,18 @@ public class CadeiraService {
     }
 
     @Transactional
-    public ListaCadeiraPorIdDTO devolucao(Long id) {
+    public ListaCadeiraPorIdDTO devolucao(Long id) throws ChairAlreadyReturned {
         Cadeiras cadeiras = cadeiraRepository.findById(id).orElseThrow(ChairNotFoundException::new);
+
+        var dev = cadeiras.getDtEntrega();
+
+
+        if (cadeiras.getDevolvida() == true && dev.isBefore(OffsetDateTime.now())) {
+            throw new ChairAlreadyReturned();
+        }
+
         cadeiras.registraHorarioDevolucao();
+
         return new ListaCadeiraPorIdDTO(
                 cadeiras.getNomePaciente(),
                 cadeiras.getDestino(),
