@@ -17,7 +17,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/cadeira")
+@RequestMapping(value = "api/cadeira")
 public class CadeiraController {
 
     @Autowired

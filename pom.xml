@@ -70,7 +70,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
+            <version>42.7.3</version> <!-- Versão mais recente em 2025 -->
         </dependency>
 
         <!-- SWAGGER -->
