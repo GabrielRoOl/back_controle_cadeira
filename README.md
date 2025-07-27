@@ -25,7 +25,7 @@ Desenvolver uma API robusta para gerenciar o ciclo de empréstimo e devolução 
 
 
 
-• [Tecnologias](#tecnologias)  •  [Pré-requisitos](#pré-requisitos)  • [Rotas](#rotas)  
+• [Tecnologias](#tecnologias) • [Pré-requisitos](#pré-requisitos) • [Rotas](#rotas) • [Futuras Implementações](#️-futuras-implementações) • [Licença](#-licença)
 
 ## Tecnologias
 
