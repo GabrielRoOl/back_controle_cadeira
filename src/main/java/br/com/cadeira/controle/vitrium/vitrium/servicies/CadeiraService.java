@@ -5,6 +5,7 @@ import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeiraPorIdDTO;
 import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeirasDTO;
 import br.com.cadeira.controle.vitrium.vitrium.entity.Cadeiras;
 import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairAlreadyReturned;
+import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairInUseException;
 import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairNotFoundException;
 import br.com.cadeira.controle.vitrium.vitrium.repositories.CadeiraRepository;
 import jakarta.transaction.Transactional;
@@ -45,6 +46,12 @@ public class CadeiraService {
 
     @Transactional
     public void addCadeira(AdicionaCadeiraDTO dto) {
+
+        var cadeiraNaoDev = cadeiraRepository.existsByCadeiraAndNaoDevolvida(dto.cadeira());
+        if (cadeiraNaoDev) {
+            throw new ChairInUseException();
+        }
+
         Cadeiras novaCadeira = new Cadeiras(
                 dto.nomePaciente(),
                 dto.destino(),
