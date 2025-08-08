@@ -1,6 +1,6 @@
 package br.com.cadeira.controle.vitrium.vitrium.exceptions.handler;
 
-import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairAlreadyReturned;
+import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairAlreadyReturnedException;
 import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairInUseException;
 import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairNotFoundException;
 import br.com.cadeira.controle.vitrium.vitrium.exceptions.model.ApiError;
@@ -42,7 +42,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler({
-            ChairAlreadyReturned.class,
+            ChairAlreadyReturnedException.class,
             ChairInUseException.class
     })
     public ResponseEntity<ApiError> conflitArgumentException(RuntimeException ex) {

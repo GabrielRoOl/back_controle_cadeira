@@ -5,7 +5,8 @@ import br.com.cadeira.controle.vitrium.vitrium.dto.DetalhamentoAdicionaCadeiraDT
 import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeiraPorIdDTO;
 import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeirasDTO;
 import br.com.cadeira.controle.vitrium.vitrium.entity.Cadeiras;
-import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairAlreadyReturned;
+import br.com.cadeira.controle.vitrium.vitrium.entity.enums.ECadeira;
+import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairAlreadyReturnedException;
 import br.com.cadeira.controle.vitrium.vitrium.servicies.CadeiraService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +53,15 @@ public class CadeiraController {
     }
 
     @PutMapping("/devolucao/{id}")
-    public ResponseEntity<ListaCadeiraPorIdDTO> devolucao(@PathVariable Long id) throws ChairAlreadyReturned {
+    public ResponseEntity<ListaCadeiraPorIdDTO> devolucaoById(@PathVariable Long id) throws ChairAlreadyReturnedException {
         ListaCadeiraPorIdDTO cadeira = cadeiraService.devolucao(id);
         return ResponseEntity.ok(cadeira);
+    }
+
+    @PutMapping("/devolucao/ECadeira/{cadeira}")
+    public ResponseEntity<ListaCadeiraPorIdDTO> devoculacoByCadeira(@PathVariable ECadeira cadeira) {
+        ListaCadeiraPorIdDTO cadeirasDTO = cadeiraService.devolucaoByCadeira(cadeira);
+        return ResponseEntity.ok(cadeirasDTO);
     }
 
 }
