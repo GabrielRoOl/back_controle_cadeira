@@ -1,6 +1,7 @@
 package br.com.cadeira.controle.vitrium.vitrium.exceptions.handler;
 
-import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairAlreadyReturned;
+import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairAlreadyReturnedException;
+import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairInUseException;
 import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairNotFoundException;
 import br.com.cadeira.controle.vitrium.vitrium.exceptions.model.ApiError;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,10 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ChairAlreadyReturned.class)
+    @ExceptionHandler({
+            ChairAlreadyReturnedException.class,
+            ChairInUseException.class
+    })
     public ResponseEntity<ApiError> conflitArgumentException(RuntimeException ex) {
         ApiError apiError = ApiError
                 .builder()

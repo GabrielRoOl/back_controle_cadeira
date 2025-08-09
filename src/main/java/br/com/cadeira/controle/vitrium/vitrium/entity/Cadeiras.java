@@ -44,7 +44,7 @@ public class Cadeiras {
     @Enumerated(EnumType.STRING)
     private ECadeira cadeira;
 
-    private Boolean devolvida = false;
+    private Boolean devolvida = true;
 
     @Transient
     private ZoneId brasilia = ZoneId.of("America/Sao_Paulo");
@@ -71,6 +71,7 @@ public class Cadeiras {
 
     public void registraHorarioEntrega() {
         this.dtEntrega = OffsetDateTime.now(brasilia);
+        this.devolvida = false;
     }
 
     public void registraHorarioDevolucao() {
