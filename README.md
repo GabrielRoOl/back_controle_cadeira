@@ -119,7 +119,7 @@ Desenvolver uma API robusta para gerenciar o ciclo de empréstimo e devolução 
 }
 ```
 ### PUT `api/cadeira/devolucao/ECadeira/{cadeira}`
-- O parametro ``{cadeira}`` é um Enum [clique aqui](https:/github.com/GabrielRoOl/back_controle_cadeira/blob/main/src/main/java/br/com/cadeira/controle/vitrium/vitrium/entity/enums/ECadeira.java) para vê-lo 
+- O parametro ``{cadeira}`` é um Enum [clique aqui](GabrielRoOl/back_controle_cadeira/blob/main/src/main/java/br/com/cadeira/controle/vitrium/vitrium/entity/enums/ECadeira.java) para vê-lo 
 
 | ECadeira   |
 |------------|
