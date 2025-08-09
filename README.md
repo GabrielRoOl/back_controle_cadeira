@@ -43,13 +43,13 @@ Desenvolver uma API robusta para gerenciar o ciclo de empréstimo e devolução 
 
 ## 📍 Rotas
 
-| Método | Rota                                       | Descrição                                                                                                              |
-|--------|--------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
-| GET    | `/api/cadeira`                             | Lista todos os registros [detalhes da resposta](#get-apicadeira)                                                       |
-| GET    | `/api/cadeira/{id}`                        | Lista registro pelo ID [detalhes da resposta](#get-apicadeiraid)                                                       |
-| POST   | `/api/cadeira`                             | Faz um novo registro [detalhes do corpo e resposta](#post-apicadeira)                                                  |
-| PUT    | `/api/cadeira/devolucao/{id}`              | Registra devolução [detalhes da resposta](#put-apicadeiradevolucaoid)                                                  |
-| PUT    | `api/cadeira/devolucao/ECadeira/{cadeira}` | Registra devolução da cadeira pela identificação da cadeira [detalhes da resposta](#put-apicadeiradevolucaoECadeiraid) |
+| Método | Rota                                       | Descrição                                                                                                                   |
+|--------|--------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| GET    | `/api/cadeira`                             | Lista todos os registros [detalhes da resposta](#get-apicadeira)                                                            |
+| GET    | `/api/cadeira/{id}`                        | Lista registro pelo ID [detalhes da resposta](#get-apicadeiraid)                                                            |
+| POST   | `/api/cadeira`                             | Faz um novo registro [detalhes do corpo e resposta](#post-apicadeira)                                                       |
+| PUT    | `/api/cadeira/devolucao/{id}`              | Registra devolução [detalhes da resposta](#put-apicadeiradevolucaoid)                                                       |
+| PUT    | `api/cadeira/devolucao/ECadeira/{cadeira}` | Registra devolução da cadeira pela identificação da cadeira [detalhes da resposta](#put-apicadeiradevolucaoECadeiracadeira) |
 
 ### GET `/api/cadeira`
 **Resposta**
