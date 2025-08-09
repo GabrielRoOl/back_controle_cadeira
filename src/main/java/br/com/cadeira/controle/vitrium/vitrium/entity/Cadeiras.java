@@ -12,11 +12,11 @@ import lombok.Setter;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "tb_cadeira")
 public class Cadeiras {
 
