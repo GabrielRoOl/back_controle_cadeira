@@ -43,28 +43,28 @@ Desenvolver uma API robusta para gerenciar o ciclo de empréstimo e devolução 
 
 ## 📍 Rotas
 
-| Método | Rota                          | Descrição                                                             |
-| ------ | ----------------------------- | --------------------------------------------------------------------- |
-| GET    | `/api/cadeira`                | Lista todos os registros [detalhes da resposta](#get-apicadeira)      |
-| GET    | `/api/cadeira/{id}`           | Lista registro pelo ID [detalhes da resposta](#get-apicadeiraid)      |
-| POST   | `/api/cadeira`                | Faz um novo registro [detalhes do corpo e resposta](#post-apicadeira) |
-| PUT    | `/api/cadeira/devolucao/{id}` | Registra devolução [detalhes da resposta](#put-apicadeiradevolucaoid) |
+| Método | Rota                                       | Descrição                                                                                                              |
+|--------|--------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| GET    | `/api/cadeira`                             | Lista todos os registros [detalhes da resposta](#get-apicadeira)                                                       |
+| GET    | `/api/cadeira/{id}`                        | Lista registro pelo ID [detalhes da resposta](#get-apicadeiraid)                                                       |
+| POST   | `/api/cadeira`                             | Faz um novo registro [detalhes do corpo e resposta](#post-apicadeira)                                                  |
+| PUT    | `/api/cadeira/devolucao/{id}`              | Registra devolução [detalhes da resposta](#put-apicadeiradevolucaoid)                                                  |
+| PUT    | `api/cadeira/devolucao/ECadeira/{cadeira}` | Registra devolução da cadeira pela identificação da cadeira [detalhes da resposta](#put-apicadeiradevolucaoECadeiraid) |
 
 ### GET `/api/cadeira`
 **Resposta**
 ```json
 [
-{
-    "id": 10,
-    "nomePaciente": "João Silva",
-    "destino": "Clínica Cardíaca",
-    "numeroClinica": 101,
-    "dataEntrega": "15-01-2024 13:00:00",
-    "dataDevolucao": "15-01-2024 15:30:00",
-    "cadeira": "CADEIRA_01",
-    "devolvida": true
-},
-// ...demais registros.
+    {
+        "id": 10,
+        "nomePaciente": "João Silva",
+        "destino": "Clínica Cardíaca",
+        "numeroClinica": 101,
+        "dataEntrega": "15-01-2024 13:00:00",
+        "dataDevolucao": "15-01-2024 15:30:00",
+        "cadeira": "CADEIRA_01",
+        "devolvida": true
+    }
 ]
 ```
 
@@ -72,13 +72,13 @@ Desenvolver uma API robusta para gerenciar o ciclo de empréstimo e devolução 
 **Resposta**
 ```json
 {
-"nomePaciente": "Gabriel Rodrigues",
-"destino": "Clínica do Gabriel",
-"numeroClinica": 101,
-"dataEntrega": "23-07-2025 14:55:00",
-"dataDevolucao": "23-07-2025 14:57:03",
-"cadeira": "CADEIRA_01",
-"devolvida": true
+    "nomePaciente": "Gabriel Rodrigues",
+    "destino": "Clínica do Gabriel",
+    "numeroClinica": 101,
+    "dataEntrega": "23-07-2025 14:55:00",
+    "dataDevolucao": "23-07-2025 14:57:03",
+    "cadeira": "CADEIRA_01",
+    "devolvida": true
 }
 ```
 
@@ -86,22 +86,22 @@ Desenvolver uma API robusta para gerenciar o ciclo de empréstimo e devolução 
 **Corpo**
 ```json
 {
-"nomePaciente": "João martins",
-"destino": "Nefrostar",
-"numeroClinica": 217,
-"cadeira": "CADEIRA_01"
+    "nomePaciente": "João martins",
+    "destino": "Nefrostar",
+    "numeroClinica": 217,
+    "cadeira": "CADEIRA_01"
 }
 ```
 
 **Resposta**
 ```json
 {
-"nomePaciente": "João martins",
-"destino": "Nefrostar",
-"numeroClinica": 217,
-"dataEntrega": "27-07-2025 10:43:34",
-"cadeira": "CADEIRA_01",
-"devolvida": false
+    "nomePaciente": "João martins",
+    "destino": "Nefrostar",
+    "numeroClinica": 217,
+    "dataEntrega": "27-07-2025 10:43:34",
+    "cadeira": "CADEIRA_01",
+    "devolvida": false
 }
 ```
 
@@ -109,15 +109,41 @@ Desenvolver uma API robusta para gerenciar o ciclo de empréstimo e devolução 
 **Response**
 ```json
 {
-"nomePaciente": "João martins",
-"destino": "Nefrostar",
-"numeroClinica": 217,
-"dataEntrega": "27-07-2025 13:43:34",
-"dataDevolucao": "27-07-2025 10:45:31",
-"cadeira": "CADEIRA_01",
-"devolvida": true
+    "nomePaciente": "João martins",
+    "destino": "Nefrostar",
+    "numeroClinica": 217,
+    "dataEntrega": "27-07-2025 13:43:34",
+    "dataDevolucao": "27-07-2025 10:45:31",
+    "cadeira": "CADEIRA_01",
+    "devolvida": true
 }
 ```
+### PUT `api/cadeira/devolucao/ECadeira/{cadeira}`
+- O parametro ``{cadeira}`` é um Enum [clique aqui](https:/github.com/GabrielRoOl/back_controle_cadeira/blob/main/src/main/java/br/com/cadeira/controle/vitrium/vitrium/entity/enums/ECadeira.java) para vê-lo 
+
+| ECadeira   |
+|------------|
+| CADEIRA_01 |
+| CADEIRA_02 |
+| CADEIRA_03 |
+| CADEIRA_04 |
+| CADEIRA_05 |
+| CADEIRA_06 |
+| CADEIRA_07 |
+| CADEIRA_08 |
+````json
+{
+    "nomePaciente": "Gabriel Rodrigues de Oliveira",
+    "destino": "Araia",
+    "numeroClinica": 217,
+    "dataEntrega": "09-08-2025 13:33:11",
+    "dataDevolucao": "09-08-2025 10:33:17",
+    "cadeira": "CADEIRA_01",
+    "devolvida": true
+}
+````
+
+
 
 ## 🛠️ Futuras Implementações
 
