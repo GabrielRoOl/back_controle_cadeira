@@ -74,6 +74,18 @@
             <version>42.7.3</version> <!-- Versão mais recente em 2025 -->
         </dependency>
 
+        <!-- SPRING SECURITY -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
         <!-- SWAGGER -->
         <dependency>
             <groupId>org.springdoc</groupId>

@@ -1,10 +1,10 @@
-package br.com.cadeira.controle.vitrium.vitrium.exceptions.handler;
+package br.com.cadeira.controle.vitrium.common.exceptions.handler;
 
-import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairAlreadyReturnedException;
-import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairDoesNotExistException;
-import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairInUseException;
-import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairNotFoundException;
-import br.com.cadeira.controle.vitrium.vitrium.exceptions.model.ApiError;
+import br.com.cadeira.controle.vitrium.common.exceptions.ChairAlreadyReturnedException;
+import br.com.cadeira.controle.vitrium.common.exceptions.ChairDoesNotExistException;
+import br.com.cadeira.controle.vitrium.common.exceptions.ChairInUseException;
+import br.com.cadeira.controle.vitrium.common.exceptions.ChairNotFoundException;
+import br.com.cadeira.controle.vitrium.common.exceptions.model.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -78,7 +78,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(ChairDoesNotExistException.class)
-    public ResponseEntity<ApiError> chairDoesNotExistException(ChairDoesNotExistException ex){
+    public ResponseEntity<ApiError> chairDoesNotExistException(ChairDoesNotExistException ex) {
         ApiError apiError = ApiError
                 .builder()
                 .timestamp(LocalDateTime.now())
@@ -90,7 +90,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ApiError> methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex){
+    public ResponseEntity<ApiError> methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         ApiError apiError = ApiError.builder()
                 .timestamp(LocalDateTime.now())
                 .code(HttpStatus.BAD_REQUEST.value())

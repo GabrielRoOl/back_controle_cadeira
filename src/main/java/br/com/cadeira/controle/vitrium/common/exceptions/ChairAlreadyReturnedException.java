@@ -1,4 +1,4 @@
-package br.com.cadeira.controle.vitrium.vitrium.exceptions;
+package br.com.cadeira.controle.vitrium.common.exceptions;
 
 public class ChairAlreadyReturnedException extends RuntimeException {
 

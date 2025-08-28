@@ -1,4 +1,4 @@
-package br.com.cadeira.controle.vitrium.vitrium.springdoc;
+package br.com.cadeira.controle.vitrium.common.springdoc;
 
 
 import io.swagger.v3.oas.models.OpenAPI;
