@@ -74,6 +74,13 @@
             <version>42.7.3</version> <!-- Versão mais recente em 2025 -->
         </dependency>
 
+        <!-- Jason Web Token  -->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.5.0</version>
+        </dependency>
+
         <!-- SPRING SECURITY -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
