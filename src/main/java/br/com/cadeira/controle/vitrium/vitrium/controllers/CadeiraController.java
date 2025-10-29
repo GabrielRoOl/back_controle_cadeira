@@ -1,12 +1,12 @@
 package br.com.cadeira.controle.vitrium.vitrium.controllers;
 
+import br.com.cadeira.controle.vitrium.common.exceptions.ChairAlreadyReturnedException;
 import br.com.cadeira.controle.vitrium.vitrium.dto.AdicionaCadeiraDTO;
 import br.com.cadeira.controle.vitrium.vitrium.dto.DetalhamentoAdicionaCadeiraDTO;
 import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeiraPorIdDTO;
 import br.com.cadeira.controle.vitrium.vitrium.dto.ListaCadeirasDTO;
 import br.com.cadeira.controle.vitrium.vitrium.entity.Cadeiras;
 import br.com.cadeira.controle.vitrium.vitrium.entity.enums.ECadeira;
-import br.com.cadeira.controle.vitrium.vitrium.exceptions.ChairAlreadyReturnedException;
 import br.com.cadeira.controle.vitrium.vitrium.servicies.CadeiraService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

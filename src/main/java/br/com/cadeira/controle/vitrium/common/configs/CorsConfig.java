@@ -1,4 +1,4 @@
-package br.com.cadeira.controle.vitrium.vitrium.configs;
+package br.com.cadeira.controle.vitrium.common.configs;
 
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Value;
