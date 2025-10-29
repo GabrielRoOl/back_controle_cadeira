@@ -2,8 +2,10 @@ package br.com.cadeira.controle.vitrium.authentication.controller;
 
 import br.com.cadeira.controle.vitrium.authentication.dto.AuthenticationDTO;
 import br.com.cadeira.controle.vitrium.authentication.dto.RegisterDTO;
+import br.com.cadeira.controle.vitrium.authentication.dto.TokenResponseDTO;
 import br.com.cadeira.controle.vitrium.authentication.entity.User;
 import br.com.cadeira.controle.vitrium.authentication.repository.UserRepository;
+import br.com.cadeira.controle.vitrium.common.configs.security.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,9 @@ public class AuthenticationController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO dto) {
         if (this.userRepository.findByLogin(dto.login()) == null) {
@@ -37,7 +42,10 @@ public class AuthenticationController {
         var password = new UsernamePasswordAuthenticationToken(dto.login(), dto.password());
         var auth = this.authenticationManager.authenticate(password);
 
-        return ResponseEntity.ok(auth.getPrincipal());
+        var user = (User) auth.getPrincipal();
+        var token = tokenService.generateToken(user);
+
+        return ResponseEntity.ok(new TokenResponseDTO(token));
     }
 
     @PostMapping("/register")
