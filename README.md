@@ -152,6 +152,8 @@ Desenvolver uma API robusta para gerenciar o ciclo de empréstimo e devolução 
 - Cadastrar cadeiras
   - [ ] Registra modelo
   - [ ] Manutenção
+- Testes Unitários
+  - [ ] Todos os endpoints
 
 # 📄 Licença
 
