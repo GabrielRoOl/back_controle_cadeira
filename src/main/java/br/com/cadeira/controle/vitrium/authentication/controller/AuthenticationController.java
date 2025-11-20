@@ -6,6 +6,7 @@ import br.com.cadeira.controle.vitrium.authentication.dto.TokenResponseDTO;
 import br.com.cadeira.controle.vitrium.authentication.entity.User;
 import br.com.cadeira.controle.vitrium.authentication.repository.UserRepository;
 import br.com.cadeira.controle.vitrium.common.configs.security.TokenService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,7 @@ public class AuthenticationController {
     @Autowired
     private TokenService tokenService;
 
+    @Operation(security = {}) // Annotation que indica a Swagger que esse é um endpoint publico
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO dto) {
         if (this.userRepository.findByLogin(dto.login()) == null) {
@@ -48,6 +50,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(new TokenResponseDTO(token));
     }
 
+    @Operation(security = {}) // Annotation que indica a Swagger que esse é um endpoint publico
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody @Valid RegisterDTO dto) {
         if (!Objects.equals(dto.password(), dto.confirmPassword())) {
