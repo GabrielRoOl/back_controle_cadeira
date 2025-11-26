@@ -2,10 +2,12 @@
 ![Java](https://img.shields.io/badge/Java-17-blue)
 
 # 🏥 API de controle de empréstimos para cadeiras de rodas
-API para gerenciamento de empréstimos, devoluções e rastreamento de cadeiras de rodas, destinada a centros clínicos, condominios, hospitais que realizam o controle de empréstimo desses equipamentos.
 
+API para gerenciamento de empréstimos, devoluções e rastreamento de cadeiras de rodas, destinada a centros clínicos,
+condominios, hospitais que realizam o controle de empréstimo desses equipamentos.
 
 ## 🔧 Funcionalidades
+
 - Cadastro de pessoas e instituições no sistema.
 - Controle de empréstimo e devolução por usuário (pacientes, funcionário, clínica, etc.).
 - Histórico de movimentação (quem pegou, quando, status).
@@ -19,21 +21,18 @@ Desenvolver uma API robusta para gerenciar o ciclo de empréstimo e devolução 
 - Eficiência operacional para instituições de saúde, reduzindo perdas e atrasos.
 - Acessibilidade digital, permitindo integração com sistemas hospitalares ou aplicativos móveis.
 
-
 **Exemplo de impacto**: <br>
-"Facilitar o acesso de pacientes a cadeiras de rodas em hospitais, assegurando que o equipamento certo esteja disponível no momento certo, enquanto fornece dados para otimizar a alocação de recursos."
-
-
+"Facilitar o acesso de pacientes a cadeiras de rodas em hospitais, assegurando que o equipamento certo esteja disponível
+no momento certo, enquanto fornece dados para otimizar a alocação de recursos."
 
 • [Tecnologias](#tecnologias) • [Pré-requisitos](#pré-requisitos) • [Rotas](#-rotas) • [Futuras Implementações](#️-futuras-implementações) • [Licença](#-licença)
 
 ## Tecnologias
 
 - Java
-- PostgreSQL    
+- PostgreSQL
 - Spring Boot
 - Intellij
-
 
 ## Pré-requisitos
 
@@ -43,83 +42,130 @@ Desenvolver uma API robusta para gerenciar o ciclo de empréstimo e devolução 
 
 ## 📍 Rotas
 
-| Método | Rota                                       | Descrição                                                                                                                   |
-|--------|--------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| GET    | `/api/cadeira`                             | Lista todos os registros [detalhes da resposta](#get-apicadeira)                                                            |
-| GET    | `/api/cadeira/{id}`                        | Lista registro pelo ID [detalhes da resposta](#get-apicadeiraid)                                                            |
-| POST   | `/api/cadeira`                             | Faz um novo registro [detalhes do corpo e resposta](#post-apicadeira)                                                       |
-| PUT    | `/api/cadeira/devolucao/{id}`              | Registra devolução [detalhes da resposta](#put-apicadeiradevolucaoid)                                                       |
-| PUT    | `api/cadeira/devolucao/ECadeira/{cadeira}` | Registra devolução da cadeira pela identificação da cadeira [detalhes da resposta](#put-apicadeiradevolucaoECadeiracadeira) |
+| Método | Rota                                        | Descrição                                                                                                                   |
+|--------|---------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| POST   | `/auth/register`                            | Faz o Registro de um novo usuário [detalhes do corpo](#post-authregister)                                                   |
+| POST   | `/auth/login`                               | Faz o Login com um [detalhes do corpo e resposta](#post-authlogin)                                                          |                                    
+| GET    | `/api/cadeira`                              | Lista todos os registros [detalhes da resposta](#get-apicadeira)                                                            |
+| GET    | `/api/cadeira/{id}`                         | Lista registro pelo ID [detalhes da resposta](#get-apicadeiraid)                                                            |
+| POST   | `/api/cadeira`                              | Faz um novo registro [detalhes do corpo e resposta](#post-apicadeira)                                                       |
+| PUT    | `/api/cadeira/devolucao/{id}`               | Registra devolução [detalhes da resposta](#put-apicadeiradevolucaoid)                                                       |
+| PUT    | `/api/cadeira/devolucao/ECadeira/{cadeira}` | Registra devolução da cadeira pela identificação da cadeira [detalhes da resposta](#put-apicadeiradevolucaoECadeiracadeira) |
+
+### POST `/auth/register`
+
+**Corpo**
+
+````json
+{
+  "login": "user_test",
+  "password": "**********",
+  "confirmPassword": "**********",
+  "role": "ADMIN"
+}
+````
+
+### POST `/auth/login`
+
+**Corpo**
+
+```json
+{
+  "login": "user_test",
+  "password": "**********"
+}
+```
+
+**Resposta**
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6InRheW5hcmEiLCJyb2xlcyI6WyJST0xFX0FETUlOIiwiUk9MRV9VU0VSIl0sImV4cCI6MTc2MzY3MzQzNn0.zIHZGaEc-1z6X192C0lkLyVR3javQrjhM16KO18nCz4"
+}
+```
 
 ### GET `/api/cadeira`
+
 **Resposta**
+
 ```json
 [
-    {
-        "id": 10,
-        "nomePaciente": "João Silva",
-        "destino": "Clínica Cardíaca",
-        "numeroClinica": 101,
-        "dataEntrega": "15-01-2024 13:00:00",
-        "dataDevolucao": "15-01-2024 15:30:00",
-        "cadeira": "CADEIRA_01",
-        "devolvida": true
-    }
+  {
+    "id": 10,
+    "nomePaciente": "João Silva",
+    "destino": "Clínica Cardíaca",
+    "numeroClinica": 101,
+    "dataEntrega": "15-01-2024 13:00:00",
+    "dataDevolucao": "15-01-2024 15:30:00",
+    "cadeira": "CADEIRA_01",
+    "devolvida": true
+  }
 ]
 ```
 
 ### GET `/api/cadeira/{id}`
+
 **Resposta**
+
 ```json
 {
-    "nomePaciente": "Gabriel Rodrigues",
-    "destino": "Clínica do Gabriel",
-    "numeroClinica": 101,
-    "dataEntrega": "23-07-2025 14:55:00",
-    "dataDevolucao": "23-07-2025 14:57:03",
-    "cadeira": "CADEIRA_01",
-    "devolvida": true
+  "nomePaciente": "Gabriel Rodrigues",
+  "destino": "Clínica do Gabriel",
+  "numeroClinica": 101,
+  "dataEntrega": "23-07-2025 14:55:00",
+  "dataDevolucao": "23-07-2025 14:57:03",
+  "cadeira": "CADEIRA_01",
+  "devolvida": true
 }
 ```
 
 ### POST `/api/cadeira`
+
 **Corpo**
+
 ```json
 {
-    "nomePaciente": "João martins",
-    "destino": "Nefrostar",
-    "numeroClinica": 217,
-    "cadeira": "CADEIRA_01"
+  "nomePaciente": "João martins",
+  "destino": "Nefrostar",
+  "numeroClinica": 217,
+  "cadeira": "CADEIRA_01"
 }
 ```
 
 **Resposta**
+
 ```json
 {
-    "nomePaciente": "João martins",
-    "destino": "Nefrostar",
-    "numeroClinica": 217,
-    "dataEntrega": "27-07-2025 10:43:34",
-    "cadeira": "CADEIRA_01",
-    "devolvida": false
+  "nomePaciente": "João martins",
+  "destino": "Nefrostar",
+  "numeroClinica": 217,
+  "dataEntrega": "27-07-2025 10:43:34",
+  "cadeira": "CADEIRA_01",
+  "devolvida": false
 }
 ```
 
 ### PUT `/api/cadeira/devolucao/{id}`
+
 **Response**
+
 ```json
 {
-    "nomePaciente": "João martins",
-    "destino": "Nefrostar",
-    "numeroClinica": 217,
-    "dataEntrega": "27-07-2025 13:43:34",
-    "dataDevolucao": "27-07-2025 10:45:31",
-    "cadeira": "CADEIRA_01",
-    "devolvida": true
+  "nomePaciente": "João martins",
+  "destino": "Nefrostar",
+  "numeroClinica": 217,
+  "dataEntrega": "27-07-2025 13:43:34",
+  "dataDevolucao": "27-07-2025 10:45:31",
+  "cadeira": "CADEIRA_01",
+  "devolvida": true
 }
 ```
+
 ### PUT `api/cadeira/devolucao/ECadeira/{cadeira}`
-- O parametro ``{cadeira}`` é um Enum [clique aqui](https://github.com/GabrielRoOl/back_controle_cadeira/blob/main/src/main/java/br/com/cadeira/controle/vitrium/vitrium/entity/enums/ECadeira.java) para vê-lo 
+
+- O parametro ``{cadeira}`` é um
+  Enum [clique aqui](https://github.com/GabrielRoOl/back_controle_cadeira/blob/main/src/main/java/br/com/cadeira/controle/vitrium/vitrium/entity/enums/ECadeira.java)
+  para vê-lo
 
 | ECadeira   |
 |------------|
@@ -131,27 +177,26 @@ Desenvolver uma API robusta para gerenciar o ciclo de empréstimo e devolução 
 | CADEIRA_06 |
 | CADEIRA_07 |
 | CADEIRA_08 |
+
 ````json
 {
-    "nomePaciente": "Gabriel Rodrigues de Oliveira",
-    "destino": "Araia",
-    "numeroClinica": 217,
-    "dataEntrega": "09-08-2025 13:33:11",
-    "dataDevolucao": "09-08-2025 10:33:17",
-    "cadeira": "CADEIRA_01",
-    "devolvida": true
+  "nomePaciente": "Gabriel Rodrigues de Oliveira",
+  "destino": "Araia",
+  "numeroClinica": 217,
+  "dataEntrega": "09-08-2025 13:33:11",
+  "dataDevolucao": "09-08-2025 10:33:17",
+  "cadeira": "CADEIRA_01",
+  "devolvida": true
 }
 ````
-
-
 
 ## 🛠️ Futuras Implementações
 
 - Cadastrar usuários
-  - [ ] Autenticação de usuário 
+    - [x] Autenticação de usuário
 - Cadastrar cadeiras
-  - [ ] Registra modelo
-  - [ ] Manutenção
+    - [ ] Registra modelo
+    - [ ] Manutenção
 
 # 📄 Licença
 
