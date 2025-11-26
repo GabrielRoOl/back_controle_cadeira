@@ -1,4 +1,4 @@
-package br.com.cadeira.controle.vitrium.vitrium.configs;
+package br.com.cadeira.controle.vitrium.common.configs;
 
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +18,11 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
-                registry.addMapping("/**").allowedMethods("*").allowedOrigins(corsOrigins);
+                registry.addMapping("/**")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowedOrigins(corsOrigins)
+                        .allowCredentials(true);
             }
         };
     }

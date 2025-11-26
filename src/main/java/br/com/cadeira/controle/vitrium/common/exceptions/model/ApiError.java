@@ -1,4 +1,4 @@
-package br.com.cadeira.controle.vitrium.vitrium.exceptions.model;
+package br.com.cadeira.controle.vitrium.common.exceptions.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
