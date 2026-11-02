@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: cadeira
+      POSTGRES_USER: cadeira
+      POSTGRES_PASSWORD: cadeira
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cadeira -d cadeira"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      APP_PROFILE: dev
+      TZ: America/Sao_Paulo
+      DB_CADEIRA_URL: jdbc:postgresql://db:5432/cadeira
+      DB_USERNAME: cadeira
+      DB_PASSWORD: cadeira
+      JWT_SECRET: ${JWT_SECRET:-troque-este-segredo}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

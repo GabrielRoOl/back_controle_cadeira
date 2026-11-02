@@ -1,161 +1,108 @@
-![License](https://img.shields.io/badge/License-MIT-green)
-![Java](https://img.shields.io/badge/Java-17-blue)
+![CI](https://github.com/GabrielRoOl/back_controle_cadeira/actions/workflows/ci.yml/badge.svg)
 
-# 🏥 API de controle de empréstimos para cadeiras de rodas
-API para gerenciamento de empréstimos, devoluções e rastreamento de cadeiras de rodas, destinada a centros clínicos, condominios, hospitais que realizam o controle de empréstimo desses equipamentos.
+# API de controle de empréstimo de cadeiras de rodas
 
+API REST para registrar o empréstimo e a devolução de cadeiras de rodas em clínicas e hospitais. Cada empréstimo guarda paciente, destino, sala, data de entrega e data de devolução, e a API impede emprestar uma cadeira que ainda não foi devolvida.
 
-## 🔧 Funcionalidades
-- Cadastro de pessoas e instituições no sistema.
-- Controle de empréstimo e devolução por usuário (pacientes, funcionário, clínica, etc.).
-- Histórico de movimentação (quem pegou, quando, status).
+O front-end em React está em [front_controle_cadeira](https://github.com/GabrielRoOl/front_controle_cadeira).
 
-## 🌐 Objetivo
+## Stack
 
-Desenvolver uma API robusta para gerenciar o ciclo de empréstimo e devolução de cadeiras de rodas, garantindo:
+- Java 17 e Spring Boot 3.5
+- Spring Web, Bean Validation e Spring Data JPA (Hibernate)
+- Spring Security com JWT (`java-jwt`), senhas com BCrypt e perfis `ADMIN` e `USER`
+- PostgreSQL (H2 em memória nos testes)
+- springdoc-openapi (Swagger UI)
+- JUnit 5, Mockito, MockMvc e `@DataJpaTest`
+- Docker e Docker Compose
+- GitHub Actions rodando `mvn test` a cada push
 
-- Controle preciso da disponibilidade dos equipamentos em tempo real.
-- Rastreabilidade de movimentações (quem retirou, quando e status atual).
-- Eficiência operacional para instituições de saúde, reduzindo perdas e atrasos.
-- Acessibilidade digital, permitindo integração com sistemas hospitalares ou aplicativos móveis.
+## Como rodar
 
+Com Docker, sem instalar Java nem PostgreSQL:
 
-**Exemplo de impacto**: <br>
-"Facilitar o acesso de pacientes a cadeiras de rodas em hospitais, assegurando que o equipamento certo esteja disponível no momento certo, enquanto fornece dados para otimizar a alocação de recursos."
-
-
-
-• [Tecnologias](#tecnologias) • [Pré-requisitos](#pré-requisitos) • [Rotas](#-rotas) • [Futuras Implementações](#️-futuras-implementações) • [Licença](#-licença)
-
-## Tecnologias
-
-- Java
-- PostgreSQL    
-- Spring Boot
-- Intellij
-
-
-## Pré-requisitos
-
-- [Java JDK 17+](https://www.java.com/en/download/manual.jsp)
-- [Spring boot](https://spring.io/projects/spring-boot)
-- [PostgreSQL](https://www.postgresql.org/)
-
-## 📍 Rotas
-
-| Método | Rota                                       | Descrição                                                                                                                   |
-|--------|--------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| GET    | `/api/cadeira`                             | Lista todos os registros [detalhes da resposta](#get-apicadeira)                                                            |
-| GET    | `/api/cadeira/{id}`                        | Lista registro pelo ID [detalhes da resposta](#get-apicadeiraid)                                                            |
-| POST   | `/api/cadeira`                             | Faz um novo registro [detalhes do corpo e resposta](#post-apicadeira)                                                       |
-| PUT    | `/api/cadeira/devolucao/{id}`              | Registra devolução [detalhes da resposta](#put-apicadeiradevolucaoid)                                                       |
-| PUT    | `api/cadeira/devolucao/ECadeira/{cadeira}` | Registra devolução da cadeira pela identificação da cadeira [detalhes da resposta](#put-apicadeiradevolucaoECadeiracadeira) |
-
-### GET `/api/cadeira`
-**Resposta**
-```json
-[
-    {
-        "id": 10,
-        "nomePaciente": "João Silva",
-        "destino": "Clínica Cardíaca",
-        "numeroClinica": 101,
-        "dataEntrega": "15-01-2024 13:00:00",
-        "dataDevolucao": "15-01-2024 15:30:00",
-        "cadeira": "CADEIRA_01",
-        "devolvida": true
-    }
-]
+```bash
+docker compose up --build
 ```
 
-### GET `/api/cadeira/{id}`
-**Resposta**
+A API sobe em `http://localhost:8080` com um PostgreSQL 16 ao lado. A documentação interativa fica em `http://localhost:8080/swagger-ui.html`.
+
+O segredo do JWT vem da variável `JWT_SECRET`. Sem ela, o compose usa um valor de desenvolvimento.
+
+Sem Docker, com um PostgreSQL local, defina `DB_CADEIRA_URL`, `DB_USERNAME`, `DB_PASSWORD` e `JWT_SECRET` e rode `./mvnw spring-boot:run`.
+
+## Autenticação
+
+As rotas `/api/**` exigem um token JWT de um usuário `ADMIN`.
+
+```bash
+# cria o usuário
+curl -X POST localhost:8080/auth/register -H 'Content-Type: application/json' \
+  -d '{"login":"admin","password":"admin123","confirmPassword":"admin123","role":"ADMIN"}'
+
+# faz login e recebe {"token": "..."}
+curl -X POST localhost:8080/auth/login -H 'Content-Type: application/json' \
+  -d '{"login":"admin","password":"admin123"}'
+```
+
+Envie o token no cabeçalho `Authorization: Bearer <token>`.
+
+## Endpoints
+
+| Método | Rota | Descrição |
+|---|---|---|
+| POST | `/auth/register` | Cria usuário (`ADMIN` ou `USER`) |
+| POST | `/auth/login` | Retorna o token JWT |
+| GET | `/api/cadeira` | Lista todos os empréstimos |
+| GET | `/api/cadeira/{id}` | Detalha um empréstimo |
+| POST | `/api/cadeira` | Registra um empréstimo |
+| PUT | `/api/cadeira/devolucao/{id}` | Registra a devolução pelo id do empréstimo |
+| PUT | `/api/cadeira/devolucao/ECadeira/{cadeira}` | Registra a devolução pela identificação da cadeira (`CADEIRA_01` a `CADEIRA_08`) |
+
+Exemplo de empréstimo:
+
+```bash
+curl -X POST localhost:8080/api/cadeira -H 'Content-Type: application/json' \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{"nomePaciente":"Paciente Teste","destino":"Clínica Teste","numeroClinica":101,"cadeira":"CADEIRA_01"}'
+```
+
 ```json
 {
-    "nomePaciente": "Gabriel Rodrigues",
-    "destino": "Clínica do Gabriel",
-    "numeroClinica": 101,
-    "dataEntrega": "23-07-2025 14:55:00",
-    "dataDevolucao": "23-07-2025 14:57:03",
-    "cadeira": "CADEIRA_01",
-    "devolvida": true
+  "nomePaciente": "Paciente Teste",
+  "destino": "Clínica Teste",
+  "numeroClinica": 101,
+  "dataEntrega": "02-11-2026 15:02:37",
+  "cadeira": "CADEIRA_01",
+  "devolvida": false
 }
 ```
 
-### POST `/api/cadeira`
-**Corpo**
-```json
-{
-    "nomePaciente": "João martins",
-    "destino": "Nefrostar",
-    "numeroClinica": 217,
-    "cadeira": "CADEIRA_01"
-}
+### Regras e erros
+
+| Situação | Resposta |
+|---|---|
+| Emprestar uma cadeira que ainda não foi devolvida | `409 Conflict`, "Cadeira em uso" |
+| Devolver um empréstimo já devolvido, ou uma cadeira sem empréstimo em aberto | `409 Conflict`, "Cadeira já foi devolvida" |
+| Id inexistente | `404 Not Found` |
+| Campo obrigatório vazio | `400 Bad Request` com a lista de erros |
+| Cadeira inválida na rota de devolução | `400 Bad Request` |
+| Sem token ou sem perfil `ADMIN` | `403 Forbidden` |
+
+## Testes
+
+```bash
+./mvnw test
 ```
 
-**Resposta**
-```json
-{
-    "nomePaciente": "João martins",
-    "destino": "Nefrostar",
-    "numeroClinica": 217,
-    "dataEntrega": "27-07-2025 10:43:34",
-    "cadeira": "CADEIRA_01",
-    "devolvida": false
-}
-```
+Os testes não precisam de banco externo: usam H2 em memória.
 
-### PUT `/api/cadeira/devolucao/{id}`
-**Response**
-```json
-{
-    "nomePaciente": "João martins",
-    "destino": "Nefrostar",
-    "numeroClinica": 217,
-    "dataEntrega": "27-07-2025 13:43:34",
-    "dataDevolucao": "27-07-2025 10:45:31",
-    "cadeira": "CADEIRA_01",
-    "devolvida": true
-}
-```
-### PUT `api/cadeira/devolucao/ECadeira/{cadeira}`
-- O parametro ``{cadeira}`` é um Enum [clique aqui](https://github.com/GabrielRoOl/back_controle_cadeira/blob/main/src/main/java/br/com/cadeira/controle/vitrium/vitrium/entity/enums/ECadeira.java) para vê-lo 
+- `CadeiraServiceTest`: regras de empréstimo e devolução, com o repositório mockado pelo Mockito
+- `CadeiraRepositoryTest`: as consultas JPQL que decidem se uma cadeira está em uso (`@DataJpaTest`)
+- `CadeiraControllerTest`: rotas e segurança com MockMvc
+- `TokenServiceTest`: geração e validação do JWT
 
-| ECadeira   |
-|------------|
-| CADEIRA_01 |
-| CADEIRA_02 |
-| CADEIRA_03 |
-| CADEIRA_04 |
-| CADEIRA_05 |
-| CADEIRA_06 |
-| CADEIRA_07 |
-| CADEIRA_08 |
-````json
-{
-    "nomePaciente": "Gabriel Rodrigues de Oliveira",
-    "destino": "Araia",
-    "numeroClinica": 217,
-    "dataEntrega": "09-08-2025 13:33:11",
-    "dataDevolucao": "09-08-2025 10:33:17",
-    "cadeira": "CADEIRA_01",
-    "devolvida": true
-}
-````
-
-
-
-## 🛠️ Futuras Implementações
-
-- Cadastrar usuários
-  - [ ] Autenticação de usuário 
-- Cadastrar cadeiras
-  - [ ] Registra modelo
-  - [ ] Manutenção
-- Testes Unitários
-  - [ ] Todos os endpoints
-
-# 📄 Licença
+## Licença
 
 MIT License
 
@@ -178,5 +125,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-[Inicio](#-api-de-controle-de-empréstimos-para-cadeiras-de-rodas)
