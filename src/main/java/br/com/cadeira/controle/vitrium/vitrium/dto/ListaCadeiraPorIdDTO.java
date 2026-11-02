@@ -11,8 +11,8 @@ public record ListaCadeiraPorIdDTO(
         @NotBlank String nomePaciente,
         @NotBlank String destino,
         @NotNull int numeroClinica,
-        @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss") OffsetDateTime dataEntrega,
-        @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss") OffsetDateTime dataDevolucao,
+        @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "America/Sao_Paulo") OffsetDateTime dataEntrega,
+        @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "America/Sao_Paulo") OffsetDateTime dataDevolucao,
         @NotNull ECadeira cadeira,
         Boolean devolvida) {
 }

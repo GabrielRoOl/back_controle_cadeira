@@ -46,7 +46,7 @@ public class CadeiraService {
 
 
     @Transactional
-    public void addCadeira(AdicionaCadeiraDTO dto) {
+    public Cadeiras addCadeira(AdicionaCadeiraDTO dto) {
 
         var cadeiraNaoDev = cadeiraRepository.existsByCadeiraAndNaoDevolvida(dto.cadeira());
         if (cadeiraNaoDev) {
@@ -62,7 +62,7 @@ public class CadeiraService {
 
         novaCadeira.registraHorarioEntrega();
 
-        cadeiraRepository.save(novaCadeira);
+        return cadeiraRepository.save(novaCadeira);
 
     }
 

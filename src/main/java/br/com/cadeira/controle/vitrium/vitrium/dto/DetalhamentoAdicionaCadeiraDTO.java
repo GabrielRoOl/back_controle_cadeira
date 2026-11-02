@@ -10,7 +10,7 @@ public record DetalhamentoAdicionaCadeiraDTO(
         String nomePaciente,
         String destino,
         int numeroClinica,
-        @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss") OffsetDateTime dataEntrega,
+        @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "America/Sao_Paulo") OffsetDateTime dataEntrega,
         ECadeira cadeira,
         Boolean devolvida) {
 

@@ -4,6 +4,7 @@ import br.com.cadeira.controle.vitrium.authentication.dto.AuthenticationDTO;
 import br.com.cadeira.controle.vitrium.authentication.dto.RegisterDTO;
 import br.com.cadeira.controle.vitrium.authentication.dto.TokenResponseDTO;
 import br.com.cadeira.controle.vitrium.authentication.entity.User;
+import br.com.cadeira.controle.vitrium.authentication.entity.enums.UserRole;
 import br.com.cadeira.controle.vitrium.authentication.repository.UserRepository;
 import br.com.cadeira.controle.vitrium.common.configs.security.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,7 +12,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,6 +63,10 @@ public class AuthenticationController {
         if (this.userRepository.findByLogin(dto.login()) != null) {
             throw new UsernameNotFoundException("usuario invalido");
         }
+        // O cadastro é público, mas só um ADMIN autenticado pode criar outro ADMIN
+        if (dto.role() == UserRole.ADMIN && !usuarioAtualEhAdmin()) {
+            throw new AccessDeniedException("Apenas um ADMIN pode cadastrar outro ADMIN");
+        }
 
         String encryptedPassowrd = new BCryptPasswordEncoder().encode(dto.password());
 
@@ -67,5 +75,11 @@ public class AuthenticationController {
         this.userRepository.save(user);
 
         return ResponseEntity.ok().build();
+    }
+
+    private boolean usuarioAtualEhAdmin() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth != null && auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 }

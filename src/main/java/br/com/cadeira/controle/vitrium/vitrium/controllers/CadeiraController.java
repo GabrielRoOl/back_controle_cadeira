@@ -42,12 +42,9 @@ public class CadeiraController {
 
     @PostMapping
     public ResponseEntity<DetalhamentoAdicionaCadeiraDTO> AddCadeira(@RequestBody @Valid AdicionaCadeiraDTO dto, UriComponentsBuilder uriBuilder) {
-        Cadeiras cadeira = new Cadeiras(dto);
-        cadeira.registraHorarioEntrega();
+        Cadeiras cadeira = cadeiraService.addCadeira(dto);
 
-        cadeiraService.addCadeira(dto);
-
-        URI uri = uriBuilder.path("/cadeira").buildAndExpand(cadeira.getId()).toUri();
+        URI uri = uriBuilder.path("/api/cadeira/{id}").buildAndExpand(cadeira.getId()).toUri();
 
         return ResponseEntity.created(uri).body(new DetalhamentoAdicionaCadeiraDTO(cadeira));
     }

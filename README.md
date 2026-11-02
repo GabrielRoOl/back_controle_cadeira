@@ -35,11 +35,9 @@ Sem Docker, com um PostgreSQL local, defina `DB_CADEIRA_URL`, `DB_USERNAME`, `DB
 
 As rotas `/api/**` exigem um token JWT de um usuário `ADMIN`.
 
-```bash
-# cria o usuário
-curl -X POST localhost:8080/auth/register -H 'Content-Type: application/json' \
-  -d '{"login":"admin","password":"admin123","confirmPassword":"admin123","role":"ADMIN"}'
+Na primeira subida, se o banco não tiver usuários, a API cria um `ADMIN` com `ADMIN_LOGIN` e `ADMIN_PASSWORD`. No compose, o padrão é `admin` / `admin123`. O cadastro em `/auth/register` é público, mas só cria `USER`. Para criar outro `ADMIN`, é preciso enviar o token de um `ADMIN`.
 
+```bash
 # faz login e recebe {"token": "..."}
 curl -X POST localhost:8080/auth/login -H 'Content-Type: application/json' \
   -d '{"login":"admin","password":"admin123"}'
@@ -51,7 +49,7 @@ Envie o token no cabeçalho `Authorization: Bearer <token>`.
 
 | Método | Rota | Descrição |
 |---|---|---|
-| POST | `/auth/register` | Cria usuário (`ADMIN` ou `USER`) |
+| POST | `/auth/register` | Cria usuário `USER` (ou `ADMIN`, se quem chama for `ADMIN`) |
 | POST | `/auth/login` | Retorna o token JWT |
 | GET | `/api/cadeira` | Lista todos os empréstimos |
 | GET | `/api/cadeira/{id}` | Detalha um empréstimo |
@@ -86,8 +84,11 @@ curl -X POST localhost:8080/api/cadeira -H 'Content-Type: application/json' \
 | Devolver um empréstimo já devolvido, ou uma cadeira sem empréstimo em aberto | `409 Conflict`, "Cadeira já foi devolvida" |
 | Id inexistente | `404 Not Found` |
 | Campo obrigatório vazio | `400 Bad Request` com a lista de erros |
-| Cadeira inválida na rota de devolução | `400 Bad Request` |
+| Cadeira fora de `CADEIRA_01` a `CADEIRA_08`, no corpo ou na rota | `400 Bad Request` |
 | Sem token ou sem perfil `ADMIN` | `403 Forbidden` |
+| Cadastrar `ADMIN` sem ser `ADMIN` | `403 Forbidden` |
+
+As datas das respostas saem no formato `dd-MM-yyyy HH:mm:ss`, no horário de Brasília.
 
 ## Testes
 
@@ -99,7 +100,9 @@ Os testes não precisam de banco externo: usam H2 em memória.
 
 - `CadeiraServiceTest`: regras de empréstimo e devolução, com o repositório mockado pelo Mockito
 - `CadeiraRepositoryTest`: as consultas JPQL que decidem se uma cadeira está em uso (`@DataJpaTest`)
-- `CadeiraControllerTest`: rotas e segurança com MockMvc
+- `CadeiraControllerTest`: rotas, segurança, `Location` do POST, erro 400 e fuso das datas, com MockMvc
+- `AuthenticationControllerTest`: o cadastro público não cria `ADMIN`
+- `AdminInitializerTest`: criação do `ADMIN` inicial
 - `TokenServiceTest`: geração e validação do JWT
 
 ## Licença

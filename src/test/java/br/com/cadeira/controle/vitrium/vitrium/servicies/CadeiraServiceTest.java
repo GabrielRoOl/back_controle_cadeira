@@ -64,12 +64,14 @@ class CadeiraServiceTest {
         @DisplayName("Registra o empréstimo como não devolvido e com data de entrega quando a cadeira está livre")
         void registraEmprestimoQuandoCadeiraLivre() {
             when(cadeiraRepository.existsByCadeiraAndNaoDevolvida(ECadeira.CADEIRA_01)).thenReturn(false);
+            when(cadeiraRepository.save(any(Cadeiras.class))).thenAnswer(inv -> inv.getArgument(0));
 
-            cadeiraService.addCadeira(novoEmprestimo);
+            Cadeiras retornada = cadeiraService.addCadeira(novoEmprestimo);
 
             ArgumentCaptor<Cadeiras> captor = ArgumentCaptor.forClass(Cadeiras.class);
             verify(cadeiraRepository).save(captor.capture());
             Cadeiras salva = captor.getValue();
+            assertThat(retornada).isSameAs(salva);
             assertThat(salva.getCadeira()).isEqualTo(ECadeira.CADEIRA_01);
             assertThat(salva.getNomePaciente()).isEqualTo("Paciente Teste");
             assertThat(salva.getDevolvida()).isFalse();
