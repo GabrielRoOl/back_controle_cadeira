@@ -31,6 +31,10 @@ O segredo do JWT vem da variável `JWT_SECRET`. Sem ela, o compose usa um valor 
 
 Sem Docker, com um PostgreSQL local, defina `DB_CADEIRA_URL`, `DB_USERNAME`, `DB_PASSWORD` e `JWT_SECRET` e rode `./mvnw spring-boot:run`.
 
+### CORS e o front no GitHub Pages
+
+O front ([front_controle_cadeira](https://github.com/GabrielRoOl/front_controle_cadeira)) chama a API em `http://localhost:8080`. Para que o front publicado em `https://gabrielrool.github.io` consiga falar com esta API rodando na sua máquina, o compose libera essa origem no CORS pela variável `CORS_ORIGINS`. Ajuste a lista caso publique a API em outro endereço.
+
 ## Autenticação
 
 As rotas `/api/**` exigem um token JWT de um usuário `ADMIN`.
